@@ -27,11 +27,13 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Laravel permissions
+# Laravel required permissions
 RUN chmod -R 777 storage bootstrap/cache
 
-# Expose port
+# Expose Render port
 EXPOSE 10000
 
-# Start Laravel
-CMD php -S 0.0.0.0:10000 -t public
+# Run migrations + seed super admin, then start server
+CMD php artisan migrate --force \
+ && php artisan db:seed --force \
+ && php -S 0.0.0.0:10000 -t public
