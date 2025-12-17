@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\JobController;
+use App\Models\Page;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +14,15 @@ use App\Http\Controllers\JobController;
 */
 
 // Landing page (CMS)
-Route::get('/', [PageController::class, 'home']);
+Route::get('/', function () {
+    $page = Page::where('slug', 'home')->first();
+
+    if (! $page) {
+        return view('welcome'); // fallback
+    }
+
+    return view('pages.show', compact('page'));
+});
 
 // Other CMS pages
 Route::get('/{slug}', [PageController::class, 'show'])

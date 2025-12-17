@@ -16,7 +16,8 @@ use Spatie\Permission\Models\Permission;
 class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
-
+    
+protected static ?string $navigationLabel = 'Roles';
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-shield-check';
 
     protected static string|\UnitEnum|null $navigationGroup = 'Security';

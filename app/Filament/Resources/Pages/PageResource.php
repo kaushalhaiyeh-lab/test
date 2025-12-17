@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 class PageResource extends Resource
 {
+    
+protected static ?string $navigationLabel = 'Pages';
+protected static ?int $navigationSort = 1;
     protected static ?string $model = Page::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
