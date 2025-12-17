@@ -11,18 +11,24 @@ class SuperAdminSeeder extends Seeder
 {
     public function run(): void
     {
-        if (User::where('email', env('SUPER_ADMIN_EMAIL'))->exists()) {
+        $email = env('SUPER_ADMIN_EMAIL');
+
+        // If env vars are missing, do nothing (prevents crash)
+        if (! $email) {
+            return;
+        }
+
+        if (User::where('email', $email)->exists()) {
             return;
         }
 
         $user = User::create([
             'name' => env('SUPER_ADMIN_NAME', 'Super Admin'),
-            'email' => env('SUPER_ADMIN_EMAIL'),
-            'password' => Hash::make(env('SUPER_ADMIN_PASSWORD')),
+            'email' => $email,
+            'password' => Hash::make(env('SUPER_ADMIN_PASSWORD', 'password')),
         ]);
 
         $role = Role::firstOrCreate(['name' => 'super_admin']);
-
         $user->assignRole($role);
     }
 }
