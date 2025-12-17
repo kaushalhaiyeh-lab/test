@@ -13,6 +13,7 @@ use Spatie\Permission\Models\Role;
 use App\Policies\RolePolicy;
 use App\Models\Service;
 use App\Policies\ServicePolicy;
+use Illuminate\Support\Facades\Gate;
 class AuthServiceProvider extends ServiceProvider
 {
     protected $policies = [
@@ -22,5 +23,11 @@ class AuthServiceProvider extends ServiceProvider
         Role::class => RolePolicy::class,
         Service::class => ServicePolicy::class,
     ];
+    public function boot(): void
+{
+    Gate::before(function ($user, $ability) {
+        return $user->hasRole('super_admin') ? true : null;
+    });
+}
     
 }
