@@ -18,22 +18,24 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set working directory
 WORKDIR /var/www
 
-# Copy application files
+# Copy app
 COPY . .
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Laravel required permissions
+# Publish Livewire & Filament assets
+RUN php artisan livewire:publish --assets \
+ && php artisan filament:assets
+
+# Permissions
 RUN chmod -R 777 storage bootstrap/cache
 
-# Expose Render port
 EXPOSE 10000
 
-# Run migrations + seed super admin, then start server
+# Run migrations, seed, start server
 CMD php artisan migrate --force \
  && php artisan db:seed --force \
  && php -S 0.0.0.0:10000 -t public
